@@ -18,7 +18,7 @@ if (isset($_SESSION['admin_role'])) {
         $result = mysqli_query($connection, "SELECT * from category WHERE ID= ");
 
 
-        $del_id = input_secure($_GET['update_id']);
+        $update_id = input_secure($_GET['update_id']);
         if (isset($_POST['save_form']) && !empty($_POST['save_form'])) {
             $cat_name = input_secure($_POST['cat_name']);
             $cat_type = input_secure($_POST['cat_type']);
