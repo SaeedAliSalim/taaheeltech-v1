@@ -15,8 +15,8 @@ if (isset($_SESSION['admin_role'])) {
 
     if (isset($_GET['update_id']) && !empty($_GET['update_id'])) {
         $update_id = input_secure($_GET['update_id']);
-        $result = mysqli_query($connection, "SELECT * from category WHERE ID= ");
-
+        $result = mysqli_query($connection, "SELECT * from category WHERE ID= '$update_id'");
+        $row= mysqli_fetch_array($result);
 
         $update_id = input_secure($_GET['update_id']);
         if (isset($_POST['save_form']) && !empty($_POST['save_form'])) {
@@ -53,7 +53,7 @@ if (isset($_SESSION['admin_role'])) {
                         <div class="form-group row">
                             <label class="col-lg-3 col-form-label text-right">اسم التصنيف</label>
                             <div class="col-lg-9 col-xl-4">
-                                <input type="text" class="form-control" name="cat_name" id="cat_name" placeholder="" />
+                                <input type="text" class="form-control" name="cat_name" id="cat_name" placeholder="" value="<?php echo $row['cat_name']?>" />
                             </div>
                         </div>
 
