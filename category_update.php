@@ -15,8 +15,13 @@ if (isset($_SESSION['admin_role'])) {
 
     if (isset($_GET['update_id']) && !empty($_GET['update_id'])) {
         $update_id = input_secure($_GET['update_id']);
-        $result = mysqli_query($connection, "SELECT * from category WHERE ID= '$update_id'");
-        $row= mysqli_fetch_array($result);
+        $result = mysqli_query($connection, "SELECT * from category WHERE ID='". $update_id ."'");
+        $category_num=mysqli_num_rows($result);
+
+        if( isset($category_num) && $category_num>0){
+
+        
+        $row = mysqli_fetch_array($result);
 
         $update_id = input_secure($_GET['update_id']);
         if (isset($_POST['save_form']) && !empty($_POST['save_form'])) {
@@ -53,11 +58,11 @@ if (isset($_SESSION['admin_role'])) {
                         <div class="form-group row">
                             <label class="col-lg-3 col-form-label text-right">اسم التصنيف</label>
                             <div class="col-lg-9 col-xl-4">
-                                <input type="text" class="form-control" name="cat_name" id="cat_name" placeholder="" value="<?php echo $row['cat_name']?>" />
+                                <input type="text" class="form-control" name="cat_name" id="cat_name" placeholder="" value="<?php echo $row['cat_name'] ?>" />
                             </div>
                         </div>
 
-                        <!-- <div class="form-group row">
+                        <div class="form-group row">
 						<label class="col-lg-3 col-form-label text-right">صورة</label>
 						<div class="col-lg-9 col-xl-4">
                             <div class="custom-file">
@@ -65,11 +70,37 @@ if (isset($_SESSION['admin_role'])) {
                                 <label class="custom-file-label" for="companyProfileFile"> Choose file </label>
                             </div>
 						</div>
-					</div> -->
+					</div>
+
+                    <div class="form-group row">
+						<label class="col-lg-3 col-form-label text-right">الصورة الحالية</label>
+						<div class="col-lg-9 col-xl-4">
+                            <div class="custom-file">
+                               <?php if(!empty($row['cat_img'] )) {?>
+                              <a href="<?php echo $row['cat_img']; ?>" target="_blank"> <img src="<?php echo $row['cat_img']; ?>" alt="لا توجد صورة"></a>
+                               <?php } ?>
+                            </div>
+						</div>
+					</div>
                         <div class="form-group row">
                             <label class="col-lg-3 col-form-label text-right">نوع التصنيف</label>
                             <div class="col-lg-9 col-xl-4">
                                 <select class="form-control form-control-solid" name="cat_type" id="cat_type">
+                                    <option value="<?php echo $row['cat_type'] ?>" selected>
+                                    <?php
+										switch ($row['cat_type']) {
+											case "1":
+												echo "مقالات";
+												break;
+											case "2":
+												echo "صور";
+												break;
+											case "3":
+												echo "فيدوهات";
+												break;
+										}
+										?>
+                                </option>
                                     <option value="1">مقالات</option>
                                     <option value="2">صور</option>
                                     <option value="3">فيدوهات</option>
@@ -81,7 +112,7 @@ if (isset($_SESSION['admin_role'])) {
                             <div class="col-3">
                                 <span class="switch switch-icon">
                                     <label>
-                                        <input type="checkbox" checked="checked" name="pvalid" id="pvalid" />
+                                        <input type="checkbox" <?php if ($row['pvalid'] == 1) {?> checked="checked"<?php }?> name="pvalid" id="pvalid" />
                                         <span></span>
                                     </label>
                                 </span>
@@ -106,7 +137,10 @@ if (isset($_SESSION['admin_role'])) {
 
     <?php
         }
-    }else{
+    }else {
+        echo "لا يوجد تصنيف بقاعدة البيانات بهذا الرقم";
+    }
+    } else {
         echo "يجب تحديد الصنف الذي ترغب في تعديل بياناته";
     }
     include('footer.php');
